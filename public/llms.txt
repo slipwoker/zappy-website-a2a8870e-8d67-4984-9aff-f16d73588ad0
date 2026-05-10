@@ -1,0 +1,83 @@
+# פרד״ס חקירות — Generative Engine Optimization Map
+
+> פרד״ס חקירות is a premium Israeli corporate investigations firm operating under a Ministry of Justice license, specializing exclusively in business investigations, corporate intelligence, and reliability assessments. The firm projects an image of absolute discretion, high credibility, and strategic sophistication — combining human intelligence, OSINT, and advanced investigative methodologies to deliver evidence-based findings. The brand identity is built on quiet confidence, professional authority, and deep trust, deliberately distancing itself from personal or domestic investigation services and positioning itself as a high-caliber partner for serious business clients navigating complex internal threats, fraud, and due diligence needs.
+
+---
+
+## Pages
+
+### בית
+https://example.com
+פרד״ס חקירות: חברת מודיעין עסקי מורשית ממשרד המשפטים. בדיקות נאותות, חקירות תאגידיות וניתוח סיכונים לעסקים בישראל. הגנו על הארגון שלכם עוד היום.
+
+### אודות
+https://example.com/about
+הכירו את פרד״ס חקירות: פירמה ישראלית עילית לחקירות עסקיות, המשלבת מודיעין אנושי, OSINT ומתודולוגיה מוכחת. רישיון ממשרד המשפטים, שיקול דעת מוחלט ואמינות ללא פשרות.
+
+### שירותים
+https://example.com/services
+ממגן על עסקאות בבדיקות נאותות ועד חשיפת מרמה פנים-ארגונית — פרד״ס חקירות מציעה שירותי מודיעין עסקי מתקדמים המותאמים לאיומים הספציפיים של הארגון שלכם.
+
+### תעשיות
+https://example.com/industries
+פרד״ס חקירות מתמחה בחקירות עסקיות המותאמות לענפים ספציפיים: פיננסים, נדל״ן, טכנולוגיה ועוד. מודיעין עסקי מדויק שמבין את הסיכונים הייחודיים לתחום פעילותכם.
+
+### צור קשר
+https://example.com/contact
+צרו קשר עם פרד״ס חקירות לפגישת ייעוץ חסויה. אם אתם מתמודדים עם איום עסקי, צורך בבדיקות נאותות או חשד למרמה — אנחנו כאן להקשיב ולפעול במהירות ובשיקול דעת.
+
+## Legal & Policy
+
+### Privacy Policy
+https://example.com/privacy
+Information about how user data is collected, stored, and protected.
+
+### Terms & Conditions
+https://example.com/terms
+Legal terms describing service usage, rights, and policies.
+
+### Accessibility Statement
+https://example.com/accessibility
+Information about WCAG compliance and accessibility features.
+
+---
+
+## How to Contact Us
+
+- (No contact details configured yet.)
+
+### Contact form
+- URL: https://example.com/contact
+- Endpoint: https://example.com/api/email/contact-form
+- Method: POST
+- Content-Type: application/json
+- Fields:
+  - `name` (text, required)
+  - `email` (email, required)
+  - `phone` (tel)
+  - `message` (textarea, required)
+  - `privacy_consent` (checkbox, required)
+
+---
+
+# Business Context (for LLM understanding)
+
+## About פרד״ס חקירות
+פרד״ס חקירות is a premium Israeli corporate investigations firm operating under a Ministry of Justice license, specializing exclusively in business investigations, corporate intelligence, and reliability assessments. The firm projects an image of absolute discretion, high credibility, and strategic sophistication — combining human intelligence, OSINT, and advanced investigative methodologies to deliver evidence-based findings. The brand identity is built on quiet confidence, professional authority, and deep trust, deliberately distancing itself from personal or domestic investigation services and positioning itself as a high-caliber partner for serious business clients navigating complex internal threats, fraud, and due diligence needs.
+
+## Target Audience
+- בעלי עסקים, מנכ״לים, מנהלי כספים, מנהלי משאבי אנוש, חברות פיננסיות, רשתות קמעונאיות, חברות השמה וגיוס, משקיעים, חברות בינלאומיות, עורכי דין ואנשי Compliance
+- בעלי עסקים ומנכ״לים
+- מנהלי כספים
+- מנהלי משאבי אנוש
+
+## Industry
+חקירות עסקיות, מודיעין עסקי, בדיקות אמינות
+
+---
+
+# Machine-readable feeds
+
+- Sitemap (XML): https://example.com/sitemap.xml
+- Robots: https://example.com/robots.txt
+- Flattened page text (for LLMs): https://example.com/llms-full.txt

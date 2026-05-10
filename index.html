@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>מודיעין עסקי שחושף את האמת — פרד״ס חקירות</title>
+    <meta name="description" content="פרד״ס חקירות: חברת מודיעין עסקי מורשית ממשרד המשפטים. בדיקות נאותות, חקירות תאגידיות וניתוח סיכונים לעסקים בישראל. הגנו על הארגון שלכם עוד היום.">
+    <meta name="keywords" content="מודיעין עסקי, בדיקות נאותות, חקירות עסקיות בישראל, חברת מודיעין עסקי, חוקר פרטי">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: 'a2a8870e-8d67-4984-9aff-f16d73588ad0',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <meta property="og:title" content="מודיעין עסקי שחושף את האמת — פרד״ס חקירות">
+    <meta property="og:description" content="פרד״ס חקירות: חברת מודיעין עסקי מורשית ממשרד המשפטים. בדיקות נאותות, חקירות תאגידיות וניתוח סיכונים לעסקים בישראל. הגנו על הארגון שלכם עוד היום.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="מודיעין עסקי שחושף את האמת — פרד״ס חקירות">
+    <meta name="twitter:description" content="פרד״ס חקירות: חברת מודיעין עסקי מורשית ממשרד המשפטים. בדיקות נאותות, חקירות תאגידיות וניתוח סיכונים לעסקים בישראל. הגנו על הארגון שלכם עוד היום.">
+    <meta property="og:type" content="website">
+  <meta property="og:locale" content="he_IL">
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+
+  
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+    <link rel="stylesheet" href="/styles.css">
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: var(--text-dark, #333) !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+      [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 10px !important; padding-right: 28px !important; }
+      .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus (exclude catalog sub-menus that use <a> children instead of <li>) */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))):not(:has(> a)), .sub-menu:not(:has(li)):not(:has(> a)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .navbar .sub-menu.mobile-expanded, .nav-menu .sub-menu.mobile-expanded, #navMenu .sub-menu.mobile-expanded { max-height: none !important; overflow-y: visible !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; position: relative !important; min-height: 44px !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; min-width: 0 !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; min-width: 0 !important; padding: 0 !important; line-height: inherit !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu, .navbar li:has(.sub-menu) > .sub-menu, #navMenu li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .nav-menu li:has(.sub-menu) > a [class*="chevron"], .nav-menu li:has(.sub-menu) > a [class*="arrow"], .nav-menu li:has(.sub-menu) > a .fa-chevron-down, .nav-menu li:has(.sub-menu) > a .fa-angle-down, nav li:has(.sub-menu) > a [class*="chevron"], nav li:has(.sub-menu) > a [class*="arrow"], #navMenu li:has(.sub-menu) > a [class*="chevron"], #navMenu li:has(.sub-menu) > a [class*="arrow"] { display: none !important; visibility: hidden !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: auto !important; background: transparent !important; border: none !important; cursor: pointer !important; color: var(--text-dark) !important; position: static !important; flex-shrink: 0 !important; align-self: stretch !important; z-index: 2 !important; padding: 0 !important; margin: 0 !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; color: var(--text-dark) !important; white-space: normal !important; }
+        .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+        [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 0 !important; padding-right: 28px !important; }
+        .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+        .nav-menu.active, #navMenu.active { max-width: 100vw !important; overflow-x: hidden !important; box-sizing: border-box !important; }
+        .navbar .sub-menu li a, nav.navbar .sub-menu li a, .zappy-products-dropdown .sub-menu a { color: var(--text-dark) !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+
+    <style id="zappy-widget-visibility">
+      html[dir="rtl"] .whatsapp-float { right: 20px !important; left: auto !important; }
+      html[dir="ltr"] .whatsapp-float, html:not([dir]) .whatsapp-float { left: 20px !important; right: auto !important; }
+      html[dir="rtl"] #mic-access-tool-general-button, html[dir="rtl"] .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="rtl"] ._access-icon { left: 20px !important; right: auto !important; }
+      html[dir="ltr"] #mic-access-tool-general-button, html[dir="ltr"] .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="ltr"] ._access-icon,
+      html:not([dir]) #mic-access-tool-general-button, html:not([dir]) .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool #mic-access-tool-general-button,
+      html:not([dir]) ._access-icon { right: 20px !important; left: auto !important; }
+      @media (max-width: 768px) { .whatsapp-float { display: flex !important; } }
+      @media (min-width: 769px) { .whatsapp-float { display: flex !important; } }
+      @media (max-width: 768px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+      @media (min-width: 769px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+    </style>
+</head>
+<body>
+<nav class="navbar" dir="rtl">
+  <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+    <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display: none;">
+      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+  </button>
+
+  <button class="phone-header-btn" data-phone="050-000-0000" aria-label="Call">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+  </button>
+
+  <div class="nav-container">
+    <div class="nav-right-group"><div class="nav-brand">
+      <a href="/" class="logo-link"><img class="logo" src="/assets/site-----image-1.webp" alt="פרד״ס חקירות"></a>
+    </div><ul class="nav-menu" id="navMenu"><li><a href="/">בית</a></li><li><a href="/about">אודות</a></li><li><a href="/services">שירותים</a></li><li><a href="/industries">תעשיות</a></li></ul></div>
+
+    
+
+    <div class="nav-cta-container">
+      <a href="/contact" class="nav-cta-btn">צור קשר</a>
+    </div>
+  </div>
+</nav>
+<script>
+
+// Navbar Mobile Menu Toggle and Contrast Fix
+(function() {
+  // Use 'load' event instead of 'DOMContentLoaded' to ensure we run AFTER all other scripts
+  window.addEventListener('load', function() {
+    
+    // FIX MOBILE BUTTON CONTRAST
+    // Detect navbar background color and apply contrasting color to mobile buttons
+    const navbar = document.querySelector('.navbar, nav, header');
+    if (!navbar) {
+      console.log('[Navbar] Navbar element not found');
+      return;
+    }
+    
+    // DECLARE VARIABLES EARLY to avoid Temporal Dead Zone errors
+    // These are used in multiple places below
+    let mobileToggle = document.getElementById('mobileToggle') ||
+                       document.querySelector('.mobile-toggle') ||
+                       document.querySelector('.hamburger') ||
+                       document.querySelector('.hamburger-menu') ||
+                       document.querySelector('.menu-toggle') ||
+                       document.querySelector('.burger-menu') ||
+                       document.querySelector('[aria-label="Menu"]') ||
+                       document.querySelector('[aria-label="תפריט"]');
+    
+    const phoneBtn = document.querySelector('.phone-header-btn');
+    
+    const computedStyle = window.getComputedStyle(navbar);
+    let bgColor = computedStyle.backgroundColor;
+    
+    console.log('[Navbar] Initial navbar background:', bgColor);
+    
+    // Check if background is transparent or rgba with 0 alpha
+    const isTransparent = bgColor === 'transparent' || 
+                         bgColor === 'rgba(0, 0, 0, 0)' ||
+                         (bgColor.startsWith('rgba') && bgColor.includes(', 0)'));
+    
+    if (isTransparent) {
+      // Check for background-image or gradient
+      const bgImage = computedStyle.backgroundImage;
+      if (bgImage && bgImage !== 'none') {
+        console.log('[Navbar] Navbar has background image/gradient, using dark text');
+        bgColor = 'rgb(240, 240, 240)'; // Assume light background
+      } else {
+        // Transparent navbar - check body background
+        const bodyBg = window.getComputedStyle(document.body).backgroundColor;
+        console.log('[Navbar] Navbar transparent, using body background:', bodyBg);
+        bgColor = bodyBg;
+      }
+    }
+    
+    // Calculate luminance to determine if background is light or dark
+    const rgb = bgColor.match(/\d+/g);
+    if (rgb && rgb.length >= 3) {
+      const r = parseInt(rgb[0]);
+      const g = parseInt(rgb[1]);
+      const b = parseInt(rgb[2]);
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      
+      // Mobile button colors are set by Claude's AI-generated CSS (same as .nav-menu a)
+      // No dynamic color overrides needed - colors come from the generated navbar CSS
+      console.log('[Navbar] Mobile button colors preserved from Claude CSS (luminance:', luminance.toFixed(2) + ')');
+      
+      // FIX ICON SIZES - Ensure SVGs are properly sized and visible
+      // INJECT CRITICAL CSS TO OVERRIDE ANY CONFLICTING RULES
+      const criticalCSS = document.createElement('style');
+      criticalCSS.id = 'zappy-mobile-nav-fix';
+      const htmlLang = document.documentElement.lang || 'en';
+      const htmlDir = document.documentElement.dir || 'ltr';
+      // Check both dir attribute AND lang for RTL detection
+      // dir="rtl" is the most reliable indicator
+      const isRTL = htmlDir === 'rtl' || htmlLang === 'he' || htmlLang === 'ar';
+      
+      criticalCSS.textContent = `
+        /* Hide mobile buttons on desktop, show only on mobile */
+        @media (min-width: 769px) {
+          .mobile-toggle,
+          .phone-header-btn {
+            display: none !important;
+          }
+        }
+        
+        /* Show and position mobile buttons correctly on mobile */
+        @media (max-width: 768px) {
+          .mobile-toggle,
+          .phone-header-btn {
+            position: absolute !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            margin-top: auto !important;
+            margin-bottom: auto !important;
+            z-index: 1001 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 50% !important;
+            border: none !important;
+            cursor: pointer !important;
+            padding: 6px !important;
+            background: none !important;
+            color: var(--nav-text, var(--text-dark)) !important;
+            touch-action: manipulation !important;
+            -webkit-tap-highlight-color: transparent !important;
+          }
+          
+          /* LTR positioning (default): hamburger LEFT, phone RIGHT */
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .mobile-toggle,
+          html[dir="ltr"] .mobile-toggle {
+            left: 12px !important;
+            right: auto !important;
+          }
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .phone-header-btn,
+          html[dir="ltr"] .phone-header-btn {
+            right: 12px !important;
+            left: auto !important;
+          }
+          
+          /* RTL positioning: hamburger RIGHT, phone LEFT */
+          html[dir="rtl"] .mobile-toggle,
+          html[lang="he"] .mobile-toggle,
+          html[lang="ar"] .mobile-toggle {
+            right: 12px !important;
+            left: auto !important;
+          }
+          html[dir="rtl"] .phone-header-btn,
+          html[lang="he"] .phone-header-btn,
+          html[lang="ar"] .phone-header-btn {
+            left: 12px !important;
+            right: auto !important;
+          }
+          
+          /* CRITICAL: Ensure nav-container has min-height on mobile */
+          /* All children are positioned absolutely/fixed on mobile, so height:auto collapses to 0 */
+          .nav-container {
+            min-height: 70px !important;
+            position: relative !important;
+          }
+          
+          /* Ensure SVG icons are properly sized and inherit color */
+          .mobile-toggle svg,
+          .phone-header-btn svg {
+            width: 24px !important;
+            height: 24px !important;
+            /* Don't force display - let JavaScript control hamburger/close toggle */
+          }
+          
+          /* Reset nav-cta-container on mobile - remove desktop box-shadow/padding */
+          /* that creates a visible ghost box when CTA button is hidden */
+          .nav-cta-container {
+            box-shadow: none !important;
+            padding: 0 !important;
+          }
+          
+          /* Hide nav-cta-container entirely on mobile when there's no lang-switcher */
+          /* (only the CTA button is inside, and it's hidden on mobile) */
+          .nav-cta-container:not(:has(.lang-switcher)) {
+            display: none !important;
+          }
+          
+          /* CRITICAL: Prevent hero image fade gradient from bleeding over headline text */
+          /* The .image-fade-gradient has bottom: -30px (extends below parent) */
+          /* On mobile stacked layout, this overlaps the h1 text below the image */
+          .hero-image-column {
+            overflow: hidden !important;
+          }
+          .image-fade-gradient {
+            bottom: 0 !important;
+          }
+          
+          /* Hide desktop language switcher on mobile - hamburger menu handles it */
+          /* High specificity to override stored CSS */
+          .lang-switcher,
+          .nav-cta-container .lang-switcher,
+          .nav-container .lang-switcher,
+          .navbar .lang-switcher,
+          .navbar .nav-cta-container .lang-switcher {
+            display: none !important;
+          }
+        }
+      `;
+      
+      // Remove existing fix if present and inject new one
+      const existing = document.getElementById('zappy-mobile-nav-fix');
+      if (existing) existing.remove();
+      document.head.appendChild(criticalCSS);
+      
+      console.log('[Navbar] Critical CSS injected for mobile nav positioning');
+      
+      // ONLY apply inline positioning styles on mobile viewport
+      // On desktop, the CSS handles hiding these buttons with display: none
+      // Inline styles were breaking desktop layout by overriding CSS
+      const isMobileViewport = window.innerWidth <= 768;
+      
+      if (mobileToggle) {
+        // Icon sizing applies to all viewports for consistency
+        const hamburgerIcon = mobileToggle.querySelector('.hamburger-icon');
+        const closeIcon = mobileToggle.querySelector('.close-icon');
+        
+        if (hamburgerIcon) {
+          hamburgerIcon.style.setProperty('width', '24px', 'important');
+          hamburgerIcon.style.setProperty('height', '24px', 'important');
+          hamburgerIcon.style.setProperty('display', 'block', 'important'); // Show hamburger by default
+        }
+        if (closeIcon) {
+          closeIcon.style.setProperty('width', '24px', 'important');
+          closeIcon.style.setProperty('height', '24px', 'important');
+          closeIcon.style.setProperty('display', 'none', 'important'); // Hide close icon by default
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          mobileToggle.style.setProperty('position', 'absolute', 'important');
+          mobileToggle.style.setProperty('top', '0', 'important');
+          mobileToggle.style.setProperty('bottom', '0', 'important');
+          mobileToggle.style.setProperty('margin-top', 'auto', 'important');
+          mobileToggle.style.setProperty('margin-bottom', 'auto', 'important');
+          mobileToggle.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          
+          console.log('[Navbar] Mobile toggle positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          mobileToggle.style.removeProperty('position');
+          mobileToggle.style.removeProperty('top');
+          mobileToggle.style.removeProperty('transform');
+          mobileToggle.style.removeProperty('z-index');
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared mobile toggle inline positioning');
+        }
+      }
+      
+      if (phoneBtn) {
+        // Icon sizing applies to all viewports
+        const phoneIcon = phoneBtn.querySelector('svg');
+        if (phoneIcon) {
+          phoneIcon.style.width = '24px';
+          phoneIcon.style.height = '24px';
+          phoneIcon.setAttribute('width', '24');
+          phoneIcon.setAttribute('height', '24');
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          phoneBtn.style.setProperty('position', 'absolute', 'important');
+          phoneBtn.style.setProperty('top', '0', 'important');
+          phoneBtn.style.setProperty('bottom', '0', 'important');
+          phoneBtn.style.setProperty('margin-top', 'auto', 'important');
+          phoneBtn.style.setProperty('margin-bottom', 'auto', 'important');
+          phoneBtn.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          
+          console.log('[Navbar] Phone button positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          phoneBtn.style.removeProperty('position');
+          phoneBtn.style.removeProperty('top');
+          phoneBtn.style.removeProperty('transform');
+          phoneBtn.style.removeProperty('z-index');
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared phone button inline positioning');
+        }
+      }
+    } else {
+      console.log('[Navbar] Could not parse background color:', bgColor);
+    }
+    
+    // MOBILE MENU TOGGLE
+    // Re-query in case DOM changed (mobileToggle already declared at top of function)
+    mobileToggle = document.getElementById('mobileToggle') ||
+                   document.querySelector('.mobile-toggle') ||
+                   document.querySelector('.hamburger') ||
+                   document.querySelector('.hamburger-menu') ||
+                   document.querySelector('.menu-toggle') ||
+                   document.querySelector('.burger-menu') ||
+                   document.querySelector('[aria-label="Menu"]') ||
+                   document.querySelector('[aria-label="תפריט"]');
+    
+    // EXPANDED SEARCH: Find nav menu by ID or class
+    const navMenu = document.getElementById('navMenu') ||
+                  document.querySelector('.nav-menu') ||
+                  document.querySelector('.nav-links') ||
+                  document.querySelector('nav ul:not(.submenu)');
+    
+    if (!mobileToggle || !navMenu) {
+      console.log('[Navbar] Mobile toggle or menu not found:', { toggle: !!mobileToggle, menu: !!navMenu });
+      return;
+    }
+    
+    // Ensure navMenu has ID for CSS targeting
+    if (!navMenu.id) {
+      navMenu.id = 'navMenu';
+    }
+    
+    console.log('[Navbar] Initializing mobile menu...');
+    
+    // Remove any existing event listeners by cloning the button
+    const newToggle = mobileToggle.cloneNode(true);
+    mobileToggle.parentNode.replaceChild(newToggle, mobileToggle);
+    
+    // Toggle menu handler (shared by click and touchend)
+    function handleToggle(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+      const closeIcon = newToggle.querySelector('.close-icon');
+      const isActive = navMenu.classList.contains('active');
+      
+      if (isActive) {
+        // Close menu
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed');
+      } else {
+        // Open menu
+        navMenu.classList.add('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'none', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'block', 'important');
+        document.body.style.overflow = 'hidden';
+        console.log('[Navbar] Menu opened');
+      }
+    }
+    
+    // Use click for desktop/emulation and touchend as iOS Safari fallback.
+    // Prevent double-fire with a timestamp guard.
+    var lastToggleTime = 0;
+    function guardedToggle(e) {
+      var now = Date.now();
+      if (now - lastToggleTime < 300) return;
+      lastToggleTime = now;
+      handleToggle(e);
+    }
+    
+    newToggle.addEventListener('click', guardedToggle);
+    newToggle.addEventListener('touchend', guardedToggle);
+    
+    // Close menu when clicking nav links (but NOT dropdown toggles)
+    const navLinks = navMenu.querySelectorAll('a');
+    navLinks.forEach(function(link) {
+      link.addEventListener('click', function() {
+        // Don't close if it's a dropdown child (unless it's a real navigation link)
+        if (this.getAttribute('href') === '#') return;
+        
+        const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+        const closeIcon = newToggle.querySelector('.close-icon');
+        
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed (link clicked)');
+      });
+    });
+    
+    // DROPDOWN MENU TOGGLE (for mobile and touch devices)
+    var dropdownToggles = navMenu.querySelectorAll('.dropdown-toggle');
+    dropdownToggles.forEach(function(toggle) {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var parent = this.closest('.nav-dropdown');
+        if (!parent) return;
+        
+        // Close other open dropdowns at the same level
+        var siblings = parent.parentNode.querySelectorAll('.nav-dropdown.open');
+        siblings.forEach(function(sib) {
+          if (sib !== parent) sib.classList.remove('open');
+        });
+        
+        parent.classList.toggle('open');
+        console.log('[Navbar] Dropdown toggled:', parent.classList.contains('open') ? 'open' : 'closed');
+      });
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        var openDropdowns = document.querySelectorAll('.nav-dropdown.open');
+        openDropdowns.forEach(function(dd) { dd.classList.remove('open'); });
+      }
+    });
+    
+    console.log('[Navbar] Dropdown handlers initialized for ' + dropdownToggles.length + ' dropdowns');
+    
+    // Phone button functionality (phoneBtn already declared at top of function)
+    if (phoneBtn) {
+      phoneBtn.addEventListener('click', function() {
+        // Get phone number from placeholder in page or use default
+        const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+        const phoneNumber = phoneLinks.length > 0 
+          ? phoneLinks[0].getAttribute('href').replace('tel:', '')
+          : '[business_phone]';
+        
+        window.location.href = 'tel:' + phoneNumber;
+        console.log('[Navbar] Phone button clicked');
+      });
+    }
+    
+    console.log('[Navbar] Mobile menu initialized successfully');
+    
+    // WhatsApp button visibility is now controlled via CSS (siteSettings).
+    // No JS-based desktop hiding — the button is visible on both mobile and desktop by default.
+  });
+})();
+
+</script>
+  
+  <main>
+    <section data-band-index="0" class="index-hero-section" data-layout-spec="בית-hero" dir="rtl" data-hero-type="fullscreen-scrim">
+  <!-- Background Image Layer -->
+  <div class="index-hero-bg" aria-hidden="true">
+    <img data-hero-bg="true" data-placeholder="index-hero-image-1" data-context="Premium executive boardroom scene with natural daylight streaming through tall windows. A polished dark wood conference table with scattered professional documents, an open laptop showing data charts, a leather notebook, and a sleek pen. The atmosphere is serious, discreet, and sophisticated — suggesting corporate investigation and due diligence. Muted earth tones, deep greens, and warm neutrals. No people visible. Israeli corporate investigative firm atmosphere." width="1200" height="700" src="/assets/site-index-hero-image-1.webp" alt="חדר ישיבות מנהלים עם מסמכים ומחשב נייד — פרדס חקירות עסקיות">
+  </div>
+
+  <!-- Scrim Overlay -->
+  <div class="index-hero-scrim" aria-hidden="true"></div>
+
+  <!-- Decorative brand motif -->
+  <svg class="index-hero-motif" data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M100 200 L100 120 M100 120 L60 80 M100 120 L140 80 M60 80 L40 50 M60 80 L80 50 M140 80 L120 50 M140 80 L160 50 M100 120 L100 90 M100 90 L85 65 M100 90 L115 65" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" opacity="0.09"></path>
+    <circle cx="100" cy="200" r="4" fill="var(--accent)" opacity="0.09"></circle>
+  </svg>
+
+  <!-- Content Container -->
+  <div class="index-hero-container">
+    <div class="index-hero-card">
+
+      <!-- License trust label -->
+      <div class="index-hero-label">
+        <span class="index-hero-label-dot" aria-hidden="true"></span>
+        <small>פועל ברישיון משרד המשפטים · מודיעין עסקי ותאגידי</small>
+      </div>
+
+      <!-- Main Headline -->
+      <h1 class="index-hero-h1">חקירות עסקיות.<br>מודיעין. אמינות.</h1>
+
+      <!-- Supporting subtitle -->
+      <h3 class="index-hero-subtitle">ממצאים מבוססי ראיות, טיפול דיסקרטי מוחלט, וחשיבה אסטרטגית — עבור מנהלים, גופים פיננסיים ועסקים המתמודדים עם סיכונים פנימיים ובדיקות נאותות.</h3>
+
+      <!-- CTA Buttons -->
+      <div class="index-hero-ctas">
+        <a href="/contact" class="index-hero-btn-primary">
+          <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+          פנייה דיסקרטית
+        </a>
+        <a href="/contact" class="index-hero-btn-secondary">
+          <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+          תיאום שיחה סודית
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom Divider -->
+  <div class="index-hero-divider-wrapper" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,80 L0,48 C120,36 240,58 360,44 C480,30 600,52 720,46 C840,40 960,56 1080,42 C1200,28 1320,50 1440,44 L1440,80 Z" fill="var(--bg-light)"></path>
+    </svg>
+  </div>
+
+</section>
+
+<section data-band-index="1" class="index-about-preview-section" data-layout-spec="בית-about-preview" dir="rtl">
+  <!-- Decorative dot grid -->
+  <div class="about-dot-grid" aria-hidden="true"></div>
+
+  <div class="about-container">
+    <!-- Content Column (START = RIGHT in RTL) -->
+    <div class="about-content-col">
+      <!-- Terracotta accent line -->
+      <div class="about-accent-line" aria-hidden="true"></div>
+
+      <p class="about-eyebrow">מי אנחנו</p>
+      <h2 class="about-heading">משרד חקירות עסקיות בלעדי — מבוסס ניסיון, מונחה ראיות</h2>
+
+      <p class="about-body">פרד״ס חקירות הוא משרד חקירות תאגידיות ישראלי, הפועל ברישיון משרד המשפטים ומתמחה באופן בלעדי בחקירות עסקיות, מודיעין עסקי ובדיקות אמינות. אנו משרתים ארגונים, צוותי ניהול, גורמי ציות ומשקיעים המתמודדים עם איומים פנימיים, הונאות וסיכוני אמינות מורכבים.</p>
+
+      <p class="about-body">המשרד משלב מודיעין אנושי, OSINT ושיטות חקירה מתקדמות לכדי תמונה מלאה, מדויקת ומבוססת ראיות — המוגשת בצורה חוקית, אתית ודיסקרטית לחלוטין. כל מעורבות מנוהלת בשקט ובאחריות מקצועית מלאה.</p>
+
+      <!-- Capability List -->
+      <ul class="about-capabilities">
+        <li class="about-capability-item">
+          <span class="cap-marker" aria-hidden="true"></span>
+          <div class="cap-content">
+            <strong>חקירות עסקיות ותאגידיות</strong>
+            <span>חקירת עובדים, מנהלים ושותפים עסקיים בחשד להונאה, גניבה ואיומים פנימיים</span>
+          </div>
+        </li>
+        <li class="about-capability-item">
+          <span class="cap-marker" aria-hidden="true"></span>
+          <div class="cap-content">
+            <strong>בדיקות נאותות ואמינות</strong>
+            <span>בחינה מעמיקה של שותפים עסקיים, מועמדים בכירים וצדדים שלישיים לפני כניסה לעסקאות</span>
+          </div>
+        </li>
+        <li class="about-capability-item">
+          <span class="cap-marker" aria-hidden="true"></span>
+          <div class="cap-content">
+            <strong>מודיעין עסקי ו-OSINT</strong>
+            <span>איסוף וניתוח מידע ממקורות פתוחים וסגורים לצורך קבלת החלטות אסטרטגיות</span>
+          </div>
+        </li>
+        <li class="about-capability-item">
+          <span class="cap-marker" aria-hidden="true"></span>
+          <div class="cap-content">
+            <strong>ממצאים מבוססי ראיות</strong>
+            <span>דוחות חקירה מקצועיים, ברורים וניתנים לשימוש משפטי ותאגידי</span>
+          </div>
+        </li>
+      </ul>
+
+      <a href="/about" class="about-cta-btn">היכרות עם המשרד</a>
+    </div>
+
+    <!-- Imagery Column (END = LEFT in RTL) -->
+    <div class="about-imagery-col">
+      <!-- Backplate tile -->
+      <div class="about-backplate" aria-hidden="true"></div>
+
+      <!-- Main image -->
+      <figure class="about-main-figure">
+        <img data-placeholder="index-about-preview-image-1" data-context="Documentary-style close-up photograph of professional hands reviewing printed investigation documents and reports on a dark wooden desk. Papers with charts, handwritten notes, and a pen visible. Warm, controlled lighting with a slightly moody, authoritative atmosphere. Corporate and serious tone — no faces visible. Suitable for a premium Israeli business investigations firm." width="600" height="720" src="/assets/site-index-about-preview-image-1.webp" alt="ידיים של חוקר עסקי עובדות על מסמכי חקירה מקצועיים">
+      </figure>
+    </div>
+  </div>
+
+  <!-- Bottom diagonal fade divider -->
+  <div class="about-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="about-divider-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#EFE7DA" stop-opacity="0"></stop>
+          <stop offset="100%" stop-color="#33413A" stop-opacity="1"></stop>
+        </linearGradient>
+      </defs>
+      <path d="M0,80 L0,28 Q300,0 600,18 T1200,8 L1200,80 Z" fill="var(--bg-dark)"></path>
+      <path d="M0,80 L0,42 Q300,20 600,34 T1200,24 L1200,80 Z" fill="var(--bg-dark)" opacity="0.85"></path>
+    </svg>
+  </div>
+</section>
+
+<section data-band-index="2" class="index-services-section" data-layout-spec="בית-services" dir="rtl">
+  <div class="index-services-container">
+    <div class="index-services-header">
+      <span class="index-services-eyebrow">תחומי פעילות</span>
+      <h2 class="index-services-title">שירותי החקירה שלנו</h2>
+      <div class="index-services-accent-line" aria-hidden="true"></div>
+      <p class="index-services-intro">כל מעורבות מוגדרת בהתאם לסיכון העסקי, למסגרת המשפטית ולמטרות הדיווח — ומבוצעת בשיתוף פעולה מלא עם הלקוח לאורך כל שלבי החקירה.</p>
+    </div>
+
+    <div class="index-services-grid">
+
+      <article class="index-services-card index-services-card--offset-0">
+        <div class="index-services-card-icon" aria-hidden="true">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="4" width="16" height="20" rx="2" stroke="currentColor" stroke-width="1.5"></rect>
+            <path d="M7 9h8M7 13h8M7 17h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            <circle cx="21" cy="21" r="4" stroke="currentColor" stroke-width="1.5"></circle>
+            <path d="M24.5 24.5l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div class="index-services-card-content">
+          <h3 class="index-services-card-title">חקירות עסקיות</h3>
+          <p class="index-services-card-text">חקירות מקיפות לחשיפת מידע קריטי בסביבות עסקיות מורכבות — כולל איסוף ראיות, מיפוי גורמים ובניית תמונת מצב מדויקת לצורכי קבלת החלטות ניהוליות.</p>
+        </div>
+      </article>
+
+      <article class="index-services-card index-services-card--offset-1">
+        <div class="index-services-card-icon" aria-hidden="true">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="14" cy="10" r="5" stroke="currentColor" stroke-width="1.5"></circle>
+            <path d="M6 24c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            <path d="M20 4l2 2-2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M8 4L6 6l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <div class="index-services-card-content">
+          <h3 class="index-services-card-title">חקירות פנים ארגוניות</h3>
+          <p class="index-services-card-text">טיפול בתקריות פנימיות רגישות — הונאה, גניבה, הדלפות מידע ועוד — תוך שמירה על סודיות מלאה, ציות לחוק ושמירה על יחסי העבודה בארגון.</p>
+        </div>
+      </article>
+
+      <article class="index-services-card index-services-card--offset-2">
+        <div class="index-services-card-icon" aria-hidden="true">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 3l2.5 5 5.5.8-4 3.9.9 5.5L14 15.5 9.1 18.2l.9-5.5-4-3.9 5.5-.8L14 3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path>
+            <path d="M9 22h10M11 25h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div class="index-services-card-content">
+          <h3 class="index-services-card-title">בדיקות אמינות לעובדים</h3>
+          <p class="index-services-card-text">הערכות אמינות מקיפות לעובדים במשרות רגישות — שילוב בין בדיקות רקע, ניתוח מידע פתוח ומודיעין אנושי לצורך גיוס מושכל ומניעת סיכונים.</p>
+        </div>
+      </article>
+
+      <article class="index-services-card index-services-card--offset-3">
+        <div class="index-services-card-icon" aria-hidden="true">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="14" cy="14" r="10" stroke="currentColor" stroke-width="1.5"></circle>
+            <path d="M14 4v3M14 21v3M4 14h3M21 14h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            <circle cx="14" cy="14" r="3" stroke="currentColor" stroke-width="1.5"></circle>
+          </svg>
+        </div>
+        <div class="index-services-card-content">
+          <h3 class="index-services-card-title">מודיעין עסקי</h3>
+          <p class="index-services-card-text">איסוף, עיבוד וניתוח מידע אסטרטגי על שווקים, מתחרים, שותפים פוטנציאליים ואיומים עסקיים — תוך שימוש בכלי OSINT מתקדמים ומודיעין אנושי איכותי.</p>
+        </div>
+      </article>
+
+      <article class="index-services-card index-services-card--offset-4">
+        <div class="index-services-card-icon" aria-hidden="true">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 7h18v14a2 2 0 01-2 2H7a2 2 0 01-2-2V7z" stroke="currentColor" stroke-width="1.5"></path>
+            <path d="M3 7h22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            <path d="M10 7V5a2 2 0 014 0v2" stroke="currentColor" stroke-width="1.5"></path>
+            <path d="M10 13l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <div class="index-services-card-content">
+          <h3 class="index-services-card-title">בדיקות נאותות</h3>
+          <p class="index-services-card-text">בדיקות נאותות מעמיקות לפני עסקאות, שותפויות ומיזוגים — חשיפת חשיפות משפטיות, פיננסיות ותפעוליות כדי לאפשר קבלת החלטות מושכלת ומבוססת עובדות.</p>
+        </div>
+      </article>
+
+      <article class="index-services-card index-services-card--offset-5">
+        <div class="index-services-card-icon" aria-hidden="true">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 3l3 8h8l-6.5 4.7 2.5 8L14 19l-7 4.7 2.5-8L3 11h8l3-8z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path>
+            <path d="M14 11v5M14 19v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div class="index-services-card-content">
+          <h3 class="index-services-card-title">חקירות הונאה ומרמה</h3>
+          <p class="index-services-card-text">חשיפת מעשי הונאה, מרמה וניצול לרעה של תפקיד בתוך הארגון ומחוצה לו — ממצאים מתועדים ומבוססי ראיות, ישימים הן לצרכים ניהוליים והן להליכים משפטיים.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <div class="index-services-divider-wrapper" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,90 L0,55 Q180,20 360,45 Q540,70 720,35 Q900,0 1080,30 Q1260,58 1440,40 L1440,90 Z" fill="var(--bg-light)"></path>
+      <path d="M0,55 Q180,20 360,45 Q540,70 720,35 Q900,0 1080,30 Q1260,58 1440,40" fill="var(--bg-light)" stroke="var(--secondary)" stroke-width="1" opacity="0.35"></path>
+    </svg>
+  </div>
+</section>
+
+<section data-band-index="3" class="index-credibility-section" data-layout-spec="בית-credibility" dir="rtl">
+  <!-- Decorative dot grid -->
+  <div class="cred-dot-grid" aria-hidden="true"></div>
+
+  <div class="cred-container">
+    <!-- Right column: intro text -->
+    <div class="cred-intro">
+      <span class="cred-label">מדוע בוחרים בנו</span>
+      <h2 class="cred-heading">אמינות שנבנית<br>על ראיות, לא על הבטחות</h2>
+      <div class="cred-accent-line" aria-hidden="true"></div>
+      <p class="cred-body">פרד״ס חקירות מספקת לארגונים ומנהלים בכירים ממצאים מבוססי ראיות בחקירות עסקיות מורכבות. אנו פועלים בשיטות חקירה מתקדמות, בשילוב מודיעין אנושי ו-OSINT, תוך שמירה קפדנית על חוקיות, אתיקה ודיסקרטיות מוחלטת.</p>
+      <p class="cred-body">הניסיון שצברנו בעבודה עם חברות, גופים פיננסיים ומנהלים בכירים מאפשר לנו לנווט בסביבות עסקיות רגישות בבטחה ובשקט — ולהעביר ממצאים שניתן לפעול על פיהם.</p>
+
+      <!-- Statement strip -->
+      <div class="cred-statement-strip">
+        <svg data-no-icon-edit="true" aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"></circle>
+          <path d="M6 9l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span>המשרד פועל בהתאם לרישיון חוקר פרטי מטעם משרד המשפטים — ומחויב לסטנדרטים משפטיים ואתיים מחמירים בכל חקירה.</span>
+      </div>
+    </div>
+
+    <!-- Left column: proof cards 2x2 grid -->
+    <div class="cred-cards-col">
+      <div class="cred-cards-grid">
+
+        <article class="cred-card">
+          <div class="cred-card-icon" aria-hidden="true">
+            <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="5" width="22" height="18" rx="2" stroke="currentColor" stroke-width="1.5"></rect>
+              <path d="M8 11h12M8 15h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+              <path d="M19 19l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            </svg>
+          </div>
+          <div class="cred-card-content">
+            <h3 class="cred-card-title">ממצאים מבוססי ראיות</h3>
+            <p class="cred-card-text">כל דוח חקירה מגובה בתיעוד עובדתי, שיטתי ומדויק — המתאים לשימוש משפטי, ניהולי ועסקי.</p>
+          </div>
+        </article>
+
+        <article class="cred-card">
+          <div class="cred-card-icon" aria-hidden="true">
+            <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14 3L5 7v7c0 5.25 3.89 10.16 9 11.33C19.11 24.16 23 19.25 23 14V7L14 3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path>
+              <path d="M10 14l2.5 2.5L18 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+          <div class="cred-card-content">
+            <h3 class="cred-card-title">דיסקרטיות מוחלטת</h3>
+            <p class="cred-card-text">כל מידע שמועבר אלינו מטופל בסודיות מלאה. הגנה על לקוחותינו ועל תהליך החקירה היא עקרון יסוד בפעילותנו.</p>
+          </div>
+        </article>
+
+        <article class="cred-card">
+          <div class="cred-card-icon" aria-hidden="true">
+            <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="14" cy="14" r="10" stroke="currentColor" stroke-width="1.5"></circle>
+              <path d="M9 14l3 3 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+          <div class="cred-card-content">
+            <h3 class="cred-card-title">מתודולוגיה מתקדמת</h3>
+            <p class="cred-card-text">שילוב של מודיעין אנושי, OSINT וכלים חקירתיים מתקדמים — המותאמים לכל תיק בנפרד לפי מאפייניו הייחודיים.</p>
+          </div>
+        </article>
+
+        <article class="cred-card">
+          <div class="cred-card-icon" aria-hidden="true">
+            <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 20c2-4 5-6 9-6s7 2 9 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+              <circle cx="14" cy="10" r="4" stroke="currentColor" stroke-width="1.5"></circle>
+              <path d="M20 8c1.5.5 3 2 3 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+              <path d="M8 8C6.5 8.5 5 10 5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            </svg>
+          </div>
+          <div class="cred-card-content">
+            <h3 class="cred-card-title">אמון של מנהלים בכירים</h3>
+            <p class="cred-card-text">מנכ״לים, מנהלי כספים ויועצים משפטיים בוחרים בנו לטיפול בחקירות עסקיות רגישות הדורשות שיקול דעת ורמת מקצועיות גבוהה.</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom torn-paper divider -->
+  <div class="cred-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1440 72" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,72 L0,38 Q30,32 60,39 T120,34 Q160,38 200,32 T280,36 Q320,40 360,33 T440,37 Q480,41 520,34 T600,38 Q640,42 680,35 T760,39 Q800,43 840,36 T920,40 Q960,44 1000,37 T1080,41 Q1120,45 1160,38 T1240,42 Q1300,46 1350,39 T1440,43 L1440,72 Z" fill="var(--bg-dark)"></path>
+    </svg>
+  </div>
+</section>
+
+<section data-band-index="4" class="index-cta-section" data-layout-spec="בית-cta" dir="rtl">
+  <div class="index-cta-outer">
+    <div class="index-cta-panel">
+      <!-- Faint top-edge illumination -->
+      <div class="index-cta-glow" aria-hidden="true"></div>
+
+      <!-- Accent divider line -->
+      <div class="index-cta-accent-line" aria-hidden="true"></div>
+
+      <div class="index-cta-content">
+        <h2 class="index-cta-heading">מוכנים לשיחה דיסקרטית?</h2>
+        <p class="index-cta-body">אם אתם מתמודדים עם חשד להונאה, איום פנימי, צורך בבדיקות נאותות, או שאלות אמינות רגישות — אנו כאן להקשיב. כל פנייה מטופלת בסודיות מוחלטת ובשיקול דעת מקצועי מהרגע הראשון.</p>
+
+        <div class="index-cta-buttons">
+          <a href="/contact" class="index-cta-btn-primary">
+            <span>פנו אלינו לשיחת ייעוץ</span>
+            <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          </a>
+          
+        </div>
+
+        <p class="index-cta-reassurance">
+          <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          כל פנייה נשמרת בסודיות מלאה · פועלים ברישיון משרד המשפטים · ללא התחייבות
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+  </main>
+  
+  <footer class="site-footer" dir="rtl">
+  <div class="footer-main">
+    <div class="footer-container">
+      <div class="footer-grid">
+
+        <!-- Column 1: Company Info -->
+        <div class="footer-col footer-col--brand">
+          <div class="footer-logo-wrap">
+            <img src="/assets/logo.webp" alt="פרד״ס חקירות" class="logo">
+          </div>
+          <p class="footer-tagline">חקירות עסקיות, מודיעין עסקי ובדיקות אמינות ברמה הגבוהה ביותר — בשיקול דעת מוחלט ובמקצועיות ללא פשרות.</p>
+          <div class="footer-social">
+            
+            
+            
+          </div>
+        </div>
+
+        <!-- Column 2: Quick Links -->
+        <div class="footer-col footer-col--nav">
+          <h3 class="footer-heading">
+            <span class="footer-heading-accent"></span>
+            ניווט מהיר
+          </h3>
+          <ul class="footer-nav-list">
+            <li><a href="/">בית</a></li>
+            <li><a href="/about">אודות</a></li>
+            <li><a href="/services">שירותים</a></li>
+            <li><a href="/industries">תעשיות</a></li>
+            <li><a href="/contact">צור קשר</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Services -->
+        <div class="footer-col footer-col--services">
+          <h3 class="footer-heading">
+            <span class="footer-heading-accent"></span>
+            תחומי פעילות
+          </h3>
+          <ul class="footer-nav-list">
+            <li><a href="/services">חקירות עסקיות</a></li>
+            <li><a href="/services">מודיעין עסקי</a></li>
+            <li><a href="/services">בדיקות אמינות</a></li>
+            <li><a href="/services">בדיקת נאותות</a></li>
+            <li><a href="/services">ניהול סיכונים</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 4: Contact -->
+        <div class="footer-col footer-col--contact">
+          <h3 class="footer-heading">
+            <span class="footer-heading-accent"></span>
+            יצירת קשר
+          </h3>
+          <ul class="footer-contact">
+            <li>
+              <span class="contact-icon"><i class="fas fa-envelope"></i></span>
+              <span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span>
+            </li>
+            <li>
+              <span class="contact-icon"><i class="fas fa-phone"></i></span>
+              <span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span>
+            </li>
+            <li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span>
+              <span class="contact-text">[business_address]</span></a></li>
+          </ul>
+          <a href="/contact" class="footer-cta">שלח פנייה ›</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="footer-bottom">
+    <div class="footer-container">
+      <div class="footer-bottom-inner">
+        <p class="footer-copyright">© 2026 פרד״ס חקירות. כל הזכויות שמורות.</p>
+        <div class="footer-legal">
+          <a href="/privacy">מדיניות פרטיות</a>
+          <span class="footer-divider">|</span>
+          <a href="/terms">תנאי שימוש</a>
+          <span class="footer-divider">|</span>
+          <a href="/accessibility">נגישות</a>
+          <span class="footer-divider">|</span>
+          <a href="https://zappy5.com" target="_blank" class="zappy-attribution">נוצר באמצעות Zappy</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+  
+  
+  
+  <div data-integration="accessibility:toolbar"></div>
+
+    <script src="/script.js"></script>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+</body>
+</html>
